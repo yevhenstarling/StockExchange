@@ -1,0 +1,50 @@
+﻿@using StockExchange.ViewModels;
+@model StockViewModel
+
+<h1>Stock Purchases</h1>
+<table>
+    <tr>
+        <th>Shares</th>
+        <th>Cost Per Share</th>
+        <th>Purchase Date</th>
+    </tr>
+    @if (Model != null)
+    {
+        @foreach (var purchase in Model.Purchases)
+        {
+            <tr>
+                <td>@purchase.Shares</td>
+                <td>@purchase.CostPerShare</td>
+                <td>@purchase.PurchaseDate.ToShortDateString()</td>
+            </tr>
+        }
+    }
+</table>
+
+<h2>Sell Shares</h2>
+<form method="post">
+    <div>
+        <label for="sharesToSell">Shares To Sell:</label>
+        <input type="number" name="sharesToSell" required>
+    </div>
+    <div>
+        <label for="pricePerShare">Price Per Share:</label>
+        <input type="number" step="0.01" name="pricePerShare" required>
+    </div>
+    <div>
+        <input type="submit" value="Sell Shares">
+    </div>
+</form>
+
+@if (Model != null && Model.Result != null)
+{
+    <h3>Status: @Model.Result.Status</h3>
+    <p>@Model.Result.Message</p>
+    @if (Model.Result.Status == "Success.")
+    {
+        <p>Remaining Shares: @Model.Result.RemainingShares</p>
+        <p>Cost Basis per Sold Share: @String.Format("{0:.##}", Model.Result.CostBasisPerSoldShare) $</p>
+        <p>Cost Basis per Remaining Share: @String.Format("{0:.##}", Model.Result.CostBasisPerRemainingShare) $</p>
+        <p>Total Profit or Loss: @String.Format("{0:.##}", Model.Result.TotalProfitOrLoss) $</p>
+    }
+}
